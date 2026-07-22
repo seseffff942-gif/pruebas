@@ -5,6 +5,7 @@ import { IS_SHIFT_MODULE_ENABLED, APP_NAME } from '../config';
 import { Leaf, LogOut, Package, ShoppingCart, FileText, Users, BadgeCheck, Menu, X, ClipboardList, Bell, BellOff, AlertTriangle, XCircle, Box, CheckCircle, CreditCard, Volume2, VolumeX, Search, Trash2, Sparkles, ExternalLink, RefreshCw, Clock, Tag, Download, Shield, Palette } from 'lucide-react';
 import { api } from '../api';
 import { motion, AnimatePresence } from 'motion/react';
+import { HiddenLogoUploader } from './HiddenLogoUploader';
 
 interface NavigationProps {
   user: User;
@@ -547,6 +548,41 @@ function NotificationsPopover({
 
 export function Navigation({ user, activeUser, currentTab, onChangeTab, onLogout, onReturnToAdmin, onImpersonate, isMobile, onShowInstallGuide, showInstallButton }: NavigationProps) {
   const [logoUrl, setLogoUrl] = useState(() => localStorage.getItem('app_logo_url') || '/logo_final.jpg');
+  const [showLogoUploader, setShowLogoUploader] = useState(false);
+  const logoClickCountRef = useRef(0);
+  const logoClickTimerRef = useRef<any>(null);
+
+  useEffect(() => {
+    const handleLogoUpdate = (e: any) => {
+      if (e.detail) setLogoUrl(e.detail);
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
+        e.preventDefault();
+        setShowLogoUploader(true);
+      }
+    };
+    window.addEventListener('app_logo_updated', handleLogoUpdate);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('app_logo_updated', handleLogoUpdate);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  const handleSecretLogoClick = () => {
+    logoClickCountRef.current += 1;
+    if (logoClickTimerRef.current) clearTimeout(logoClickTimerRef.current);
+
+    if (logoClickCountRef.current >= 5) {
+      logoClickCountRef.current = 0;
+      setShowLogoUploader(true);
+    } else {
+      logoClickTimerRef.current = setTimeout(() => {
+        logoClickCountRef.current = 0;
+      }, 2500);
+    }
+  };
 
   const [sellers, setSellers] = useState<User[]>([]);
   const [isSellersLoading, setIsSellersLoading] = useState(false);
@@ -995,7 +1031,14 @@ export function Navigation({ user, activeUser, currentTab, onChangeTab, onLogout
       {/* Mobile Top Header */}
       <header className="md:hidden sticky top-0 z-50 bg-white border-b border-slate-200 flex justify-between items-center px-4 h-16 w-full select-none">
         <div className="flex items-center gap-1.5">
-          <img src={logoUrl} alt="Logo" className="h-10 w-10 sm:h-11 sm:w-11 object-contain filter drop-shadow-xs" onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/40?text=Logo'; }} />
+          <img 
+            src={logoUrl} 
+            alt="Logo" 
+            onClick={handleSecretLogoClick}
+            className="h-10 w-10 sm:h-11 sm:w-11 object-contain filter drop-shadow-xs cursor-pointer active:scale-95 transition-transform" 
+            title="Click 5 veces para menú secreto de logo"
+            onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/40?text=Logo'; }} 
+          />
           <div className="flex items-center gap-1.5">
             <h1 translate="no" className="notranslate font-sans font-black text-sm sm:text-base text-slate-800 tracking-tight leading-none">{APP_NAME}</h1>
             <button 
@@ -1411,7 +1454,14 @@ export function Navigation({ user, activeUser, currentTab, onChangeTab, onLogout
       <header className="hidden md:flex fixed top-0 left-[260px] right-0 h-16 bg-white border-b border-[#e1e3e4] items-center justify-between px-10 z-40">
         <div className="flex items-center flex-1">
           <div className="flex items-center gap-3">
-            <img src={logoUrl} alt="Logo" className="h-10 w-10 sm:h-11 sm:w-11 object-contain filter drop-shadow-xs" onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/32?text=Logo'; }} />
+            <img 
+              src={logoUrl} 
+              alt="Logo" 
+              onClick={handleSecretLogoClick}
+              className="h-10 w-10 sm:h-11 sm:w-11 object-contain filter drop-shadow-xs cursor-pointer active:scale-95 transition-transform" 
+              title="Click 5 veces para menú secreto de logo"
+              onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/32?text=Logo'; }} 
+            />
             <span translate="no" className="notranslate font-hanken font-bold text-xl text-[#0f1c2c] leading-tight mr-4">{APP_NAME}</span>
             
             {/* Interactive Data Sync Status Badge */}
@@ -1991,6 +2041,12 @@ export function Navigation({ user, activeUser, currentTab, onChangeTab, onLogout
         user={user}
         soundsEnabled={soundsEnabled}
         setSoundsEnabled={setSoundsEnabled}
+      />
+      {/* Hidden Universal Logo Uploader Modal */}
+      <HiddenLogoUploader 
+        isOpen={showLogoUploader} 
+        onClose={() => setShowLogoUploader(false)} 
+        onLogoUploaded={(url) => setLogoUrl(url)} 
       />
     </>
   );

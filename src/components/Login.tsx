@@ -3,6 +3,7 @@ import { Lock, Mail, User as UserIcon, Monitor, Smartphone, Sparkles, AlertTrian
 import { api } from '../api';
 import { motion, AnimatePresence } from 'motion/react';
 import { validatePassword } from '../utils';
+import { HiddenLogoUploader } from './HiddenLogoUploader';
 
 interface LoginProps {
   onLogin: (user: any, device: 'desktop' | 'phone') => void;
@@ -10,6 +11,41 @@ interface LoginProps {
 
 export function Login({ onLogin }: LoginProps) {
   const [logoUrl, setLogoUrl] = useState(() => localStorage.getItem('app_logo_url') || '/logo_final.jpg');
+  const [showLogoUploader, setShowLogoUploader] = useState(false);
+  const logoClickCountRef = React.useRef(0);
+  const logoClickTimerRef = React.useRef<any>(null);
+
+  React.useEffect(() => {
+    const handleLogoUpdate = (e: any) => {
+      if (e.detail) setLogoUrl(e.detail);
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
+        e.preventDefault();
+        setShowLogoUploader(true);
+      }
+    };
+    window.addEventListener('app_logo_updated', handleLogoUpdate);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('app_logo_updated', handleLogoUpdate);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  const handleSecretLogoClick = () => {
+    logoClickCountRef.current += 1;
+    if (logoClickTimerRef.current) clearTimeout(logoClickTimerRef.current);
+
+    if (logoClickCountRef.current >= 5) {
+      logoClickCountRef.current = 0;
+      setShowLogoUploader(true);
+    } else {
+      logoClickTimerRef.current = setTimeout(() => {
+        logoClickCountRef.current = 0;
+      }, 2500);
+    }
+  };
 
   React.useEffect(() => {
     api.getAppLogo().then(res => {
@@ -245,7 +281,11 @@ export function Login({ onLogin }: LoginProps) {
                 <div className="absolute -inset-2 rounded-3xl sm:rounded-[2rem] bg-gradient-to-tr from-emerald-500/25 via-teal-500/20 to-emerald-400/25 blur-xl animate-pulse" />
 
                 {/* Core Photo / Logo frame container */}
-                <div className="w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-2xl sm:rounded-3xl bg-[#030a07] border border-white/20 backdrop-blur-lg p-3 sm:p-4 flex items-center justify-center shadow-[inset_0_2px_12px_rgba(255,255,255,0.15)] relative overflow-hidden z-10 group transition-all duration-300 hover:scale-102">
+                <div 
+                  onClick={handleSecretLogoClick}
+                  className="w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-2xl sm:rounded-3xl bg-[#030a07] border border-white/20 backdrop-blur-lg p-3 sm:p-4 flex items-center justify-center shadow-[inset_0_2px_12px_rgba(255,255,255,0.15)] relative overflow-hidden z-10 group transition-all duration-300 hover:scale-102 cursor-pointer"
+                  title="Haz clic 5 veces para cambiar el logo corporativo"
+                >
                   {/* Subtle reflective glass highlight within the slot */}
                   <div className="absolute -inset-y-1 left-[-100%] w-1/3 bg-gradient-to-r from-transparent via-white/15 to-transparent skew-x-30 transition-all duration-1000 group-hover:left-[150%]" />
                   
@@ -626,6 +666,11 @@ export function Login({ onLogin }: LoginProps) {
         </div>
       </div>
 
+      <HiddenLogoUploader 
+        isOpen={showLogoUploader} 
+        onClose={() => setShowLogoUploader(false)} 
+        onLogoUploaded={(url) => setLogoUrl(url)} 
+      />
     </div>
   );
 }

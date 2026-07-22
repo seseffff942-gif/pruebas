@@ -19,6 +19,15 @@ export function HomePage({ user, onChangeTab, onLogout, isMobile }: HomePageProp
   const [invoices, setInvoices] = useState<any[]>([]);
   const [productsCount, setProductsCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [logoUrl, setLogoUrl] = useState(() => localStorage.getItem('app_logo_url') || '/logo_final.jpg');
+
+  useEffect(() => {
+    const handleLogoUpdate = (e: any) => {
+      if (e.detail) setLogoUrl(e.detail);
+    };
+    window.addEventListener('app_logo_updated', handleLogoUpdate);
+    return () => window.removeEventListener('app_logo_updated', handleLogoUpdate);
+  }, []);
 
   useEffect(() => {
     async function loadDashboardData() {
@@ -58,7 +67,7 @@ export function HomePage({ user, onChangeTab, onLogout, isMobile }: HomePageProp
               <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 blur-md group-hover:blur-lg transition-all" />
               <div className="relative w-24 h-24 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-2xl bg-slate-900 border border-slate-700/60 p-3 sm:p-4 flex items-center justify-center shadow-md overflow-hidden">
                 <img 
-                  src={localStorage.getItem('app_logo_url') || '/logo_final.jpg'} 
+                  src={logoUrl} 
                   alt="Logo Central" 
                   className="max-w-full max-h-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105"
                   onError={(e) => { e.currentTarget.src = '/logo_final.jpg'; }}

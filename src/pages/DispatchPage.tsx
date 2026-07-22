@@ -24,7 +24,9 @@ import {
   Layers,
   Sparkles,
   Info,
-  Check
+  Check,
+  Camera,
+  CameraOff
 } from 'lucide-react';
 // @ts-ignore
 import html2pdf from 'html2pdf.js';
@@ -111,8 +113,19 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [itemSearchQuery, setItemSearchQuery] = useState('');
   const [showScanner, setShowScanner] = useState(false);
+  const [isCameraActive, setIsCameraActive] = useState(false);
   const [isFlashActive, setIsFlashActive] = useState(false);
   const [scanLogs, setScanLogs] = useState<ScanLog[]>([]);
+
+  useEffect(() => {
+    const handleLogoUpdate = (e: any) => {
+      if (e.detail) {
+        setLogoData(e.detail);
+      }
+    };
+    window.addEventListener('app_logo_updated', handleLogoUpdate);
+    return () => window.removeEventListener('app_logo_updated', handleLogoUpdate);
+  }, []);
 
   // Refs for stable callback & physical barcode gun reader
   const invoiceRef = useRef<Invoice | null>(null);
@@ -1027,13 +1040,59 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
                 </div>
                 
                 <div className="flex-1 p-5 flex flex-col gap-4 overflow-y-auto custom-scrollbar">
-                  {/* Stable Camera View Scanner with Auto-Reset Key */}
-                  <StableScanner 
-                    onScan={handleScan}
-                    disabled={selectedInvoice.status === 'despachado'}
-                    isFlashActive={isFlashActive}
-                    resetKey={scannerResetKey}
-                  />
+                  {/* Manual Camera Toggle Control Bar */}
+                  <div className="bg-slate-950 border border-white/10 p-3.5 rounded-2xl flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className={cn(
+                        "w-2.5 h-2.5 rounded-full animate-pulse",
+                        isCameraActive ? "bg-emerald-400" : "bg-slate-500"
+                      )} />
+                      <span className="text-[11px] font-black uppercase text-white tracking-wider">
+                        {isCameraActive ? 'Cámara En Vivo' : 'Cámara Apagada'}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => setIsCameraActive(!isCameraActive)}
+                      disabled={selectedInvoice.status === 'despachado'}
+                      className={cn(
+                        "px-3.5 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 disabled:opacity-30",
+                        isCameraActive 
+                          ? "bg-rose-500/20 text-rose-300 border border-rose-500/30 hover:bg-rose-500/30" 
+                          : "bg-emerald-600 text-white hover:bg-emerald-700 shadow-md shadow-emerald-600/20"
+                      )}
+                    >
+                      {isCameraActive ? (
+                        <>
+                          <CameraOff size={14} /> Apagar
+                        </>
+                      ) : (
+                        <>
+                          <Camera size={14} /> Activar Cámara
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Camera Scanner View or Inactive Placeholder */}
+                  {isCameraActive ? (
+                    <StableScanner 
+                      onScan={handleScan}
+                      disabled={selectedInvoice.status === 'despachado'}
+                      isFlashActive={isFlashActive}
+                      resetKey={scannerResetKey}
+                    />
+                  ) : (
+                    <div className="aspect-square bg-slate-950 rounded-3xl border-2 border-dashed border-white/10 flex flex-col items-center justify-center p-6 text-center shadow-inner">
+                      <div className="w-14 h-14 bg-white/5 text-slate-400 rounded-2xl flex items-center justify-center mb-3">
+                        <CameraOff size={28} />
+                      </div>
+                      <p className="text-white font-black text-xs uppercase tracking-wider">Cámara Desactivada</p>
+                      <p className="text-slate-400 text-[10px] font-bold mt-1 max-w-[200px] leading-relaxed">
+                        Haz clic en &quot;Activar Cámara&quot; si deseas usar la webcam/móvil. El escáner USB físico sigue activo.
+                      </p>
+                    </div>
+                  )}
                   
                   {/* Last Scan Status Display */}
                   <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
