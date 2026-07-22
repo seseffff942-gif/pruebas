@@ -65,7 +65,7 @@ export function HomePage({ user, onChangeTab, onLogout, isMobile }: HomePageProp
             {/* Central Prominent Corporate Logo */}
             <div className="relative group shrink-0">
               <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 blur-md group-hover:blur-lg transition-all" />
-              <div className="relative w-24 h-24 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-2xl bg-slate-900 border border-slate-700/60 p-3 sm:p-4 flex items-center justify-center shadow-md overflow-hidden">
+              <div className="relative w-24 h-24 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-2xl bg-white border border-slate-200/90 p-3 sm:p-4 flex items-center justify-center shadow-sm overflow-hidden">
                 <img 
                   src={logoUrl} 
                   alt="Logo Central" 

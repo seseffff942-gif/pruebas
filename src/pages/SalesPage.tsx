@@ -1022,6 +1022,24 @@ export function SalesPage({ user, isMobile }: SalesPageProps) {
             </div>
           </div>
 
+          {/* Interactive Category Filter Pills */}
+          <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={cn(
+                  "px-4 py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all whitespace-nowrap cursor-pointer",
+                  selectedCategory === cat
+                    ? "bg-[#0b4d2c] text-white shadow-md shadow-emerald-900/20 scale-102"
+                    : "bg-slate-100 hover:bg-slate-200 text-slate-600"
+                )}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
         </div>
 
         {/* Dynamic & Beautiful Products Catalog Grid */}

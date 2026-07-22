@@ -283,7 +283,7 @@ export function Login({ onLogin }: LoginProps) {
                 {/* Core Photo / Logo frame container */}
                 <div 
                   onClick={handleSecretLogoClick}
-                  className="w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-2xl sm:rounded-3xl bg-[#030a07] border border-white/20 backdrop-blur-lg p-3 sm:p-4 flex items-center justify-center shadow-[inset_0_2px_12px_rgba(255,255,255,0.15)] relative overflow-hidden z-10 group transition-all duration-300 hover:scale-102 cursor-pointer"
+                  className="w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-2xl sm:rounded-3xl bg-white/10 border border-white/20 backdrop-blur-md p-3 sm:p-4 flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.2)] relative overflow-hidden z-10 group transition-all duration-300 hover:scale-102 cursor-pointer"
                   title="Haz clic 5 veces para cambiar el logo corporativo"
                 >
                   {/* Subtle reflective glass highlight within the slot */}
