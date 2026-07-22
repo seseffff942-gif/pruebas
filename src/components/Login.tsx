@@ -236,30 +236,30 @@ export function Login({ onLogin }: LoginProps) {
             {/* Header / Logo Segment */}
             <div className="text-center mb-8 relative">
               {/* Premium Logo Showcase with Elegant Halo & Soft Reflections */}
-              <div className="mx-auto w-24 h-24 mb-5 relative flex items-center justify-center">
+              <div className="mx-auto w-32 h-32 sm:w-40 sm:h-40 lg:w-44 lg:h-44 mb-6 relative flex items-center justify-center transition-all duration-300">
                 {/* Concentric glass rings */}
-                <span className="absolute inset-0 rounded-3xl border border-white/10 bg-white/[0.02] rotate-12 scale-105 pointer-events-none" />
-                <span className="absolute inset-0 rounded-3xl border border-emerald-500/20 bg-emerald-500/[0.01] -rotate-6 scale-105 pointer-events-none" />
+                <span className="absolute inset-0 rounded-3xl sm:rounded-[2rem] border border-white/10 bg-white/[0.02] rotate-12 scale-105 pointer-events-none" />
+                <span className="absolute inset-0 rounded-3xl sm:rounded-[2rem] border border-emerald-500/20 bg-emerald-500/[0.01] -rotate-6 scale-105 pointer-events-none" />
                 
                 {/* Glowing Backlight Ring */}
-                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 blur-lg animate-pulse" />
+                <div className="absolute -inset-2 rounded-3xl sm:rounded-[2rem] bg-gradient-to-tr from-emerald-500/25 via-teal-500/20 to-emerald-400/25 blur-xl animate-pulse" />
 
                 {/* Core Photo / Logo frame container */}
-                <div className="w-20 h-20 rounded-2xl bg-[#030a07] border border-white/20 backdrop-blur-lg p-2.5 flex items-center justify-center shadow-[inset_0_2px_10px_rgba(255,255,255,0.1)] relative overflow-hidden z-10 group">
+                <div className="w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-2xl sm:rounded-3xl bg-[#030a07] border border-white/20 backdrop-blur-lg p-3 sm:p-4 flex items-center justify-center shadow-[inset_0_2px_12px_rgba(255,255,255,0.15)] relative overflow-hidden z-10 group transition-all duration-300 hover:scale-102">
                   {/* Subtle reflective glass highlight within the slot */}
-                  <div className="absolute -inset-y-1 left-[-100%] w-1/3 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-30 transition-all duration-1000 group-hover:left-[150%]" />
+                  <div className="absolute -inset-y-1 left-[-100%] w-1/3 bg-gradient-to-r from-transparent via-white/15 to-transparent skew-x-30 transition-all duration-1000 group-hover:left-[150%]" />
                   
                   {mode === 'login' && matchingUser && matchingUser.photo ? (
                     <img 
                       src={matchingUser.photo} 
                       alt={matchingUser.name} 
-                      className="w-full h-full object-cover rounded-xl"
+                      className="w-full h-full object-cover rounded-xl sm:rounded-2xl"
                     />
                   ) : (
                     <img 
                       src={logoUrl} 
                       alt="Logo" 
-                      className="w-full h-full object-contain" 
+                      className="max-w-full max-h-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" 
                       onError={(e) => { 
                         e.currentTarget.src = 'https://via.placeholder.com/150?text=POS'; 
                       }} 

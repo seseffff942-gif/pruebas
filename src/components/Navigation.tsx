@@ -995,7 +995,7 @@ export function Navigation({ user, activeUser, currentTab, onChangeTab, onLogout
       {/* Mobile Top Header */}
       <header className="md:hidden sticky top-0 z-50 bg-white border-b border-slate-200 flex justify-between items-center px-4 h-16 w-full select-none">
         <div className="flex items-center gap-1.5">
-          <img src={logoUrl} alt="Logo" className="h-8 w-8 object-contain" onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/40?text=Logo'; }} />
+          <img src={logoUrl} alt="Logo" className="h-10 w-10 sm:h-11 sm:w-11 object-contain filter drop-shadow-xs" onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/40?text=Logo'; }} />
           <div className="flex items-center gap-1.5">
             <h1 translate="no" className="notranslate font-sans font-black text-sm sm:text-base text-slate-800 tracking-tight leading-none">{APP_NAME}</h1>
             <button 
@@ -1411,7 +1411,7 @@ export function Navigation({ user, activeUser, currentTab, onChangeTab, onLogout
       <header className="hidden md:flex fixed top-0 left-[260px] right-0 h-16 bg-white border-b border-[#e1e3e4] items-center justify-between px-10 z-40">
         <div className="flex items-center flex-1">
           <div className="flex items-center gap-3">
-            <img src={logoUrl} alt="Logo" className="h-8 w-8 object-contain" onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/32?text=Logo'; }} />
+            <img src={logoUrl} alt="Logo" className="h-10 w-10 sm:h-11 sm:w-11 object-contain filter drop-shadow-xs" onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/32?text=Logo'; }} />
             <span translate="no" className="notranslate font-hanken font-bold text-xl text-[#0f1c2c] leading-tight mr-4">{APP_NAME}</span>
             
             {/* Interactive Data Sync Status Badge */}

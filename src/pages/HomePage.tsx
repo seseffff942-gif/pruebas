@@ -49,21 +49,38 @@ export function HomePage({ user, onChangeTab, onLogout, isMobile }: HomePageProp
       
       {/* Header Corporativo / Welcome Section */}
       <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-3 py-1 rounded-md text-xs font-semibold uppercase tracking-wider">
-              <ShieldCheck size={14} className="text-slate-700" />
-              <span>{APP_NAME}</span>
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          
+          {/* Left: Info & Central Logo Showcase */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start lg:items-center gap-6">
+            {/* Central Prominent Corporate Logo */}
+            <div className="relative group shrink-0">
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 blur-md group-hover:blur-lg transition-all" />
+              <div className="relative w-24 h-24 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-2xl bg-slate-900 border border-slate-700/60 p-3 sm:p-4 flex items-center justify-center shadow-md overflow-hidden">
+                <img 
+                  src={localStorage.getItem('app_logo_url') || '/logo_final.jpg'} 
+                  alt="Logo Central" 
+                  className="max-w-full max-h-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+                  onError={(e) => { e.currentTarget.src = '/logo_final.jpg'; }}
+                />
+              </div>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-              Bienvenido, {user.name || user.email}
-            </h1>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              {APP_DESCRIPTION}. Gestione inventarios, ventas en caja, cuentas por cobrar y emisión de comprobantes desde esta consola central.
-            </p>
+
+            <div className="space-y-2 max-w-xl text-center sm:text-left">
+              <div className="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-3 py-1 rounded-md text-xs font-semibold uppercase tracking-wider">
+                <ShieldCheck size={14} className="text-slate-700" />
+                <span>{APP_NAME}</span>
+              </div>
+              <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+                Bienvenido, {user.name || user.email}
+              </h1>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                {APP_DESCRIPTION}. Gestione inventarios, ventas en caja, cuentas por cobrar y emisión de comprobantes desde esta consola central.
+              </p>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center justify-center lg:justify-end gap-3 shrink-0 pt-2 lg:pt-0">
             <button
               onClick={() => onChangeTab('sales')}
               className="px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-sm active:scale-98 cursor-pointer flex items-center gap-2"
