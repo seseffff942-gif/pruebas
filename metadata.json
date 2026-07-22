@@ -1,0 +1,8 @@
+{
+  "name": "Sistema POS & Control de Inventarios",
+  "description": "Plantilla genérica marca blanca para punto de venta e inventario",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
