@@ -265,7 +265,7 @@ export default function App() {
           }
         }}
       />
-      <main className={`flex-1 overflow-auto relative md:ml-[260px] md:pt-16`}>
+      <main className={`flex-1 overflow-auto relative md:ml-[312px] md:pt-[96px] md:pr-6 md:pb-6 bg-slate-50/50`}>
         {currentTab === 'home' && <HomePage user={activeUser as User} onChangeTab={setCurrentTab} onLogout={handleLogout} isMobile={isMobile} />}
         {currentTab === 'shifts' && IS_SHIFT_MODULE_ENABLED && <ShiftsPage user={activeUser as User} isMobile={isMobile} />}
         {currentTab === 'dispatch' && activeUser.role === 'admin' && <DispatchPage user={activeUser as User} isMobile={isMobile} />}

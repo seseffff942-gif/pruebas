@@ -1329,14 +1329,14 @@ export function Navigation({ user, activeUser, currentTab, onChangeTab, onLogout
       </AnimatePresence>
 
       {/* Desktop Navigation Structure (Sidebar + TopAppBar) */}
-      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[260px] bg-[#0f1c2c] text-[#778598] flex-col py-8 z-50 overflow-y-auto overflow-x-hidden custom-sidebar-scroll">
-        <div className="px-6 mb-8">
+      <aside className="hidden md:flex fixed left-4 top-4 bottom-4 w-[280px] bg-[#0f1c2c] text-[#778598] flex-col py-6 px-4 z-50 rounded-3xl shadow-[0_10px_30px_-10px_rgba(15,28,44,0.3)] border border-white/5 overflow-y-auto overflow-x-hidden custom-sidebar-scroll animate-fade-in">
+        <div className="px-4 mb-6">
           <h1 translate="no" className="notranslate font-hanken font-bold text-[20px] text-white tracking-tight leading-tight">{APP_NAME}</h1>
-          <p className="text-[11px] text-[#778598] mt-1 uppercase tracking-widest font-hanken font-bold mb-4">Enterprise POS System</p>
+          <p className="text-[10px] text-[#778598]/80 mt-1 uppercase tracking-widest font-hanken font-bold mb-4">Enterprise POS System</p>
           <button 
             onClick={handleOpenSyncModal}
             className={cn(
-              "w-full flex items-center justify-between p-2.5 rounded-xl border text-xs font-bold transition-all text-left hover:scale-98 active:scale-95 cursor-pointer",
+              "w-full flex items-center justify-between p-2.5 rounded-xl border text-[11px] font-bold transition-all text-left hover:scale-98 active:scale-95 cursor-pointer",
               isOnline 
                 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
                 : "bg-amber-500/10 text-amber-400 border-amber-500/20"
@@ -1348,14 +1348,14 @@ export function Navigation({ user, activeUser, currentTab, onChangeTab, onLogout
                 "w-1.5 h-1.5 rounded-full",
                 isOnline ? "bg-emerald-400 animate-pulse" : "bg-amber-400 animate-pulse"
               )} />
-              <span className="font-bold text-[10px] tracking-wider uppercase">
+              <span className="font-bold text-[9px] tracking-wider uppercase">
                 {isOnline ? "En Tiempo Real" : "Caché Local"}
               </span>
             </div>
             <RefreshCw size={10} className={cn("opacity-60", isSyncing && "animate-spin")} />
           </button>
         </div>
-        <nav className="flex-1 space-y-1">
+        <nav className="flex-1 space-y-1.5">
           {navItems.filter(item => item.roles.includes(user.role)).map((item) => {
             const isActive = currentTab === item.id;
             return (
@@ -1363,14 +1363,14 @@ export function Navigation({ user, activeUser, currentTab, onChangeTab, onLogout
                 key={item.id}
                 onClick={() => onChangeTab(item.id)}
                 className={cn(
-                  "w-full flex items-center px-6 py-3 transition-colors duration-200 cursor-pointer text-left",
+                  "w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer text-left select-none relative group",
                   isActive 
-                    ? "border-l-4 border-[#9ef1f1] bg-[#3a4859]/10 text-[#9ef1f1] font-bold" 
+                    ? "bg-[#0c5c35] text-white font-bold shadow-md shadow-emerald-950/20" 
                     : "text-[#778598] font-medium hover:text-white hover:bg-white/5"
                 )}
               >
-                <item.icon size={22} className="mr-3" />
-                <span className="font-manrope text-[14px]">{item.label}</span>
+                <item.icon size={18} className={cn("mr-3 transition-transform duration-200 group-hover:scale-110", isActive ? "text-white" : "text-[#778598]")} />
+                <span className="font-manrope text-[13.5px] tracking-tight">{item.label}</span>
               </button>
             )
           })}
@@ -1451,7 +1451,7 @@ export function Navigation({ user, activeUser, currentTab, onChangeTab, onLogout
         </div>
       </aside>
 
-      <header className="hidden md:flex fixed top-0 left-[260px] right-0 h-16 bg-white border-b border-[#e1e3e4] items-center justify-between px-10 z-40">
+      <header className="hidden md:flex fixed top-4 left-[312px] right-6 h-16 bg-white/80 backdrop-blur-md border border-slate-200/80 items-center justify-between px-8 z-40 rounded-2xl shadow-sm transition-all duration-300">
         <div className="flex items-center flex-1">
           <div className="flex items-center gap-3">
             <img 

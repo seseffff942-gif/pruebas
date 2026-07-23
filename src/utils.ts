@@ -65,427 +65,293 @@ export const DEFAULT_PRINT_TEMPLATE = `<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Recibo de Venta Profesional - POS System</title>
+    <title>Comprobante de Pago - POS</title>
     <base href="{{origin}}/" />
     <style>
         @page {
             size: A4;
-            margin: 15mm 15mm;
+            margin: 10mm 10mm;
             background-color: #ffffff;
         }
-        
         @media print {
             body {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                color: #000000 !important;
                 background-color: #ffffff !important;
+                color: #0f172a !important;
             }
-            /* Clean black text with zero halftoning for superb readability and sharp printing */
-            .info-detail-item, .meta-info-text, .tagline {
-                color: #000000 !important;
-                font-weight: 500 !important;
+            .header-banner {
+                background-color: #1A4D2E !important;
+                color: #ffffff !important;
             }
-            .totals-subtable .lbl {
-                color: #000000 !important;
-                font-weight: bold !important;
-            }
-            .modern-table td {
-                color: #000000 !important;
-                font-weight: 500 !important;
-            }
-            .info-profile-name {
-                color: #000000 !important;
-                font-weight: 800 !important;
-            }
-            .section-heading {
-                color: #000000 !important;
-                font-weight: 800 !important;
-                border-bottom: 2px solid #000000 !important;
-                display: block !important;
-                padding-bottom: 3px !important;
-            }
-            /* Prevent blurry fonts on print rendering */
-            body, p, td, th, div, span {
-                text-shadow: none !important;
-                box-shadow: none !important;
+            .column-title {
+                color: #475569 !important;
+                border-bottom-color: #cbd5e1 !important;
             }
         }
-
         * {
             box-sizing: border-box;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
-
         body {
             margin: 0;
             padding: 0;
-            font-size: 11pt;
-            line-height: 1.5;
-            color: #111111; /* Clean high-contrast almost-black for screen and print */
-        }
-
-        tr {
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        /* Encabezado */
-        .header-container {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 25px;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .header-container td {
-            vertical-align: middle;
-            padding: 0;
-        }
-
-        .company-details {
-            width: 70%;
-        }
-
-        .logo-details {
-            width: 30%;
-            text-align: right;
-        }
-
-        .tagline {
-            font-size: 9.5pt;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #111111;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .company-title {
-            font-size: 26pt;
-            font-weight: 800;
-            color: #1A4D2E;
-            margin: 0 0 8px 0;
-            letter-spacing: -0.5px;
-        }
-
-        .meta-info-text {
             font-size: 10pt;
-            color: #111111;
-            margin-bottom: 3px;
+            color: #1e293b;
+            background-color: #ffffff;
         }
-
-        .policy-banner {
-            margin-top: 12px;
-            display: inline-block;
-            background-color: #F0FDF4;
-            border-left: 3.5px solid #16A34A;
-            padding: 6px 12px;
-            font-size: 9.5pt;
-            font-weight: 700;
-            color: #14532D;
-            border-radius: 0 4px 4px 0;
+        /* Top Banner - Totally different from old header structure */
+        .header-banner {
+            background-color: #1A4D2E;
+            color: #ffffff;
+            width: 100%;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
-
-        /* Bloques informativos de dos columnas */
-        .info-grid {
+        .header-banner h1 {
+            margin: 0;
+            font-size: 18pt;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+        .header-banner .folio-badge {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 11pt;
+            font-weight: 800;
+            font-family: monospace;
+        }
+        /* Details layout - Structured as columns instead of cards */
+        .details-container {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
-
-        .info-grid td {
-            width: 50%;
+        .details-container td {
+            width: 33.33%;
             vertical-align: top;
-            padding: 0;
+            padding: 0 12px;
         }
-
-        .info-card-left {
-            padding-right: 15px;
-        }
-
-        .info-card-right {
-            padding-left: 15px;
-            border-left: 2px solid #E2E8F0;
-        }
-
-        .section-heading {
-            font-size: 10.5pt;
+        .details-container td:first-child { padding-left: 0; }
+        .details-container td:last-child { padding-right: 0; }
+        
+        .column-title {
+            font-size: 8.5pt;
+            font-weight: 800;
+            color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #1A4D2E;
-            font-weight: 800;
+            letter-spacing: 1.5px;
             margin-bottom: 10px;
-            border-bottom: 1.5px solid #E2E8F0;
-            padding-bottom: 2px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 4px;
         }
-
-        .info-profile-name {
-            font-size: 12.5pt;
-            font-weight: 800;
-            color: #000000;
-            margin-bottom: 6px;
+        .info-text {
+            font-size: 9.5pt;
+            line-height: 1.5;
+            color: #0f172a;
         }
-
-        .info-detail-item {
-            font-size: 10.5pt;
-            color: #111111;
-            margin-bottom: 4px;
-        }
-
-        /* Tabla Moderna */
-        .modern-table {
+        /* Minimal Table style - instead of rounded header and gray grid */
+        .items-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
-
-        .modern-table th {
-            background-color: #1A4D2E;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 10pt;
+        .items-table th {
+            border-bottom: 2px solid #0f172a;
+            padding: 10px 8px;
+            font-size: 9pt;
+            font-weight: 800;
+            color: #0f172a;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 12px 14px;
-            border: none;
         }
-
-        .modern-table th.align-left { text-align: left; border-radius: 6px 0 0 6px; }
-        .modern-table th.align-center { text-align: center; }
-        .modern-table th.align-right { text-align: right; border-radius: 0 6px 6px 0; }
-
-        .modern-table td {
-            padding: 12px 14px;
-            font-size: 11pt;
-            border-bottom: 1px solid #E2E8F0;
-            color: #000000;
+        .items-table td {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 8px;
+            font-size: 10pt;
+            color: #334155;
         }
-
-        .modern-table tr:nth-child(even) td {
-            background-color: #F8FAFC;
+        .items-table tr:last-child td {
+            border-bottom: 2px solid #0f172a;
         }
-
-        /* Firmas */
-        .signature-section {
-            margin-top: 40px;
+        /* Totals block layout - Bottom right aligned card */
+        .summary-section {
             width: 100%;
+            margin-top: 15px;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+        .summary-table {
+            width: 42%;
+            margin-left: 58%;
+            border-collapse: collapse;
+        }
+        .summary-table td {
+            padding: 8px 12px;
+            font-size: 10pt;
+        }
+        .summary-table .label {
+            text-align: right;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .summary-table .value {
+            text-align: right;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .summary-table tr.total-row td {
+            border-top: 2px solid #e2e8f0;
+            padding-top: 12px;
+            font-size: 12pt;
+            font-weight: 900;
+            color: #1A4D2E;
+        }
+        /* Signature Layout - Modern Side-by-Side */
+        .footer-signatures {
+            width: 100%;
+            margin-top: 40px;
             border-collapse: collapse;
             page-break-inside: avoid;
+            break-inside: avoid;
         }
-        .signature-box {
+        .footer-signatures td {
             width: 50%;
             text-align: center;
-            padding: 10px;
             vertical-align: bottom;
+            padding: 10px 20px;
         }
         .signature-line {
-            border-top: 1.5px solid #000;
-            margin-top: 50px;
+            border-top: 1.5px solid #94a3b8;
+            margin-top: 45px;
             padding-top: 6px;
-            font-size: 10pt;
+            font-size: 9pt;
             font-weight: 800;
+            color: #475569;
             text-transform: uppercase;
-            color: #000;
         }
         .signature-img {
-            max-width: 160px;
-            max-height: 80px;
+            max-width: 150px;
+            max-height: 70px;
             display: block;
-            margin: 0 auto -45px auto;
-        }
-
-        .text-left { text-align: left; }
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
-
-        /* Estructura de Totales */
-        .totals-wrapper {
-            width: 100%;
-            margin-top: 20px;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .totals-subtable {
-            width: 45%;
-            margin-left: 55%;
-            border-collapse: collapse;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .totals-subtable td {
-            padding: 9px 14px;
-            font-size: 11pt;
-        }
-
-        .totals-subtable tr.border-top td {
-            border-top: 2px solid #E2E8F0;
-        }
-
-        .totals-subtable .lbl {
-            color: #333333;
-            text-align: right;
-            font-weight: 700;
-        }
-
-        .totals-subtable .val {
-            text-align: right;
-            font-weight: 750;
-            color: #000000;
-            width: 45%;
-        }
-
-        .totals-subtable tr.grand-total td {
-            background-color: #1A4D2E;
-            padding: 11px 14px;
-            border-radius: 6px;
-        }
-
-        .totals-subtable tr.grand-total .lbl {
-            color: #ffffff;
-            font-weight: 700;
-        }
-
-        .totals-subtable tr.grand-total .val {
-            color: #ffffff;
-            font-size: 13pt;
-            font-weight: 800;
-        }
-
-        .logo-svg {
-            width: 130px;
-            height: 130px;
+            margin: 0 auto -40px auto;
         }
     </style>
 </head>
 <body>
 
-    <table class="header-container">
+    <div class="header-banner">
+        <div>
+            <h1>Comprobante de Venta</h1>
+            <div style="font-size: 9.5pt; opacity: 0.85; margin-top: 4px;">Transacción de Mercadería Oficial</div>
+        </div>
+        <div class="folio-badge">FOLIO #{{folio}}</div>
+    </div>
+
+    <table class="details-container">
         <tr>
-            <td class="company-details">
-                <div class="tagline">Comprobante de Venta</div>
-                <h1 class="company-title">SISTEMA POS</h1>
-                <div class="meta-info-text"><strong>Atención:</strong> contacto@sistema-pos.local</div>
-                <div class="meta-info-text"><strong>Teléfono:</strong> +502 3645 0241</div>
-                <div class="meta-info-text">Barrio Segunda Lotificación, Santa Elena, Petén</div>
-                <div class="policy-banner">CAMBIO O DEVOLUCIONES TIENE VIGENCIA DE 8 DÍAS 🏆</div>
+            <td>
+                <div class="column-title">Emisor</div>
+                <div class="info-text">
+                    <strong style="color: #1A4D2E;">AGRICOVET</strong><br>
+                    Barrio Segunda Lotificación,<br>
+                    Santa Elena, Petén<br>
+                    Tel: +502 3645 0241<br>
+                    contacto@sistema-pos.local
+                </div>
             </td>
-            <td class="logo-details">
-                <!-- Logotipo Oficial del Usuario -->
-                <img src="{{logoUrl}}" alt="AGRICOVET Logo" style="max-width: 160px; max-height: 140px; object-fit: contain;" />
+            <td>
+                <div class="column-title">Cliente</div>
+                <div class="info-text">
+                    <strong>{{customerName}}</strong><br>
+                    NIT: {{customerNit}}<br>
+                    Dirección: {{customerAddress}}<br>
+                    Teléfono: {{phone}}
+                </div>
+            </td>
+            <td>
+                <div class="column-title">Detalles</div>
+                <div class="info-text">
+                    <strong>Fecha:</strong> {{date}}<br>
+                    <strong>Forma Pago:</strong> {{paymentForm}}<br>
+                    <strong>Estado:</strong> {{status}}<br>
+                    <strong>Vendedor:</strong> {{sellerName}}
+                </div>
             </td>
         </tr>
     </table>
 
-    <table class="info-grid">
-        <tr>
-            <td>
-                <div class="info-card-left">
-                    <div class="section-heading">Cliente</div>
-                    <div class="info-profile-name">{{customerName}}</div>
-                    <div class="info-detail-item"><strong>NIT:</strong> {{customerNit}}</div>
-                    <div class="info-detail-item"><strong>Dirección:</strong> {{customerAddress}}</div>
-                    <div class="info-detail-item"><strong>Teléfono:</strong> {{phone}}</div>
-                </div>
-            </td>
-            <td>
-                <div class="info-card-right">
-                    <div class="section-heading">Detalles del Documento</div>
-                    <div class="info-detail-item"><strong>Folio:</strong> <span style="color: #1A4D2E; font-weight: bold;">#{{folio}}</span></div>
-                    <div class="info-detail-item"><strong>Fecha:</strong> {{date}}</div>
-                    <div class="info-detail-item"><strong>Forma de Pago:</strong> {{paymentForm}}</div>
-                    <div class="info-detail-item"><strong>Estado:</strong> {{status}}</div>
-                    <div class="info-detail-item"><strong>Vendedor:</strong> {{sellerName}}</div>
-                </div>
-            </td>
-        </tr>
-    </table>
-
-    <table class="modern-table">
+    <table class="items-table">
         <thead>
             <tr>
-                <th class="align-left" style="width: 50%;">Producto</th>
-                <th class="align-center" style="width: 15%;">Cantidad</th>
-                <th class="align-right" style="width: 15%;">Precio</th>
-                <th class="align-right" style="width: 20%;">Subtotal</th>
+                <th style="text-align: left; width: 50%;">Descripción</th>
+                <th style="text-align: center; width: 15%;">Cantidad</th>
+                <th style="text-align: right; width: 15%;">Precio</th>
+                <th style="text-align: right; width: 20%;">Subtotal</th>
             </tr>
         </thead>
         <tbody>
             {{#each items}}
             <tr>
-                <td class="text-left" style="font-weight: 500;">
+                <td style="text-align: left; font-weight: 500;">
                     {{this.productName}}
-                    <div style="font-size: 8.5pt; color: #555555; font-weight: normal; margin-top: 2px;">{{this.variantInfo}}</div>
+                    <div style="font-size: 8.5pt; color: #64748b; margin-top: 2px;">{{this.variantInfo}}</div>
                 </td>
-                <td class="text-center">{{this.quantity}}</td>
-                <td class="text-right">Q {{this.price}}</td>
-                <td class="text-right" style="font-weight: 600;">Q {{this.subtotal}}</td>
+                <td style="text-align: center;">{{this.quantity}}</td>
+                <td style="text-align: right;">Q {{this.price}}</td>
+                <td style="text-align: right; font-weight: 700; color: #0f172a;">Q {{this.subtotal}}</td>
             </tr>
             {{/each}}
         </tbody>
     </table>
 
-    <div class="totals-wrapper">
-        <table class="totals-subtable">
+    <div class="summary-section">
+        <table class="summary-table">
             <tr>
-                <td class="lbl">Total Bruto</td>
-                <td class="val">Q {{totalAmount}}</td>
+                <td class="label">Total Bruto</td>
+                <td class="value">Q {{totalAmount}}</td>
             </tr>
-            <tr class="border-top">
-                <td class="lbl">Pagos Recibidos</td>
-                <td class="val" style="color: #16A34A;">Q {{paidAmount}}</td>
+            <tr>
+                <td class="label">Pagado</td>
+                <td class="value" style="color: #16a34a;">Q {{paidAmount}}</td>
             </tr>
-            <tr class="grand-total">
-                <td class="lbl">Total a Pagar</td>
-                <td class="val">Q {{dueAmount}}</td>
+            <tr class="total-row">
+                <td class="label" style="color: #1A4D2E;">Saldo Pendiente</td>
+                <td class="value">Q {{dueAmount}}</td>
             </tr>
         </table>
     </div>
 
-    <table class="signature-section" style="margin-top: 20px;">
+    <table class="footer-signatures">
         <tr>
-            <td class="signature-box">
+            <td>
                 {{#if sellerSignature}}
                     <img src="{{sellerSignature}}" class="signature-img" />
                 {{/if}}
-                <div class="signature-line">Firma Vendedor</div>
+                <div class="signature-line">Firma Autorizada Vendedor</div>
             </td>
-            <td class="signature-box">
+            <td>
                 {{#if adminSignature}}
                     <img src="{{adminSignature}}" class="signature-img" />
-                    <div style="font-size: 8pt; margin-top: 4px; font-weight: bold; color: #1A4D2E;">Revisado por: {{reviewedBy}}</div>
                 {{/if}}
-                <div class="signature-line">Revisado por (Admin)</div>
+                <div class="signature-line">Firma Autorizada Administrador</div>
             </td>
         </tr>
     </table>
 
-    <table style="width: 100%; margin-top: 25px; border-collapse: collapse; page-break-inside: avoid;">
-        <tr>
-            <td style="width: 48%; text-align: center; vertical-align: middle; padding: 5px;">
-                <div style="border: none; padding: 0;">
-                    <div style="font-size: 9pt; font-weight: 800; color: #1A4D2E; text-transform: uppercase; margin-bottom: 4px;">Depositar a: BANCO INDUSTRIAL</div>
-                    <div style="font-size: 11pt; font-weight: 900; color: #000; margin: 2px 0;">035-015252-6</div>
-                    <div style="font-size: 9pt; font-weight: 700; color: #555555; margin: 2px 0;">Agricovet de Guatemala</div>
-                </div>
-            </td>
-            <td style="width: 4%;">&nbsp;</td>
-            <td style="width: 48%; text-align: center; vertical-align: middle; padding: 5px;">
-                <div style="border: none; padding: 0;">
-                    <div style="font-size: 9pt; font-weight: 800; color: #1A4D2E; text-transform: uppercase; margin-bottom: 4px;">Depositar a: BANRURAL</div>
-                    <div style="font-size: 11pt; font-weight: 900; color: #000; margin: 2px 0;">3580029532</div>
-                    <div style="font-size: 9pt; font-weight: 700; color: #555555; margin: 2px 0;">Agricovet de Guatemala</div>
-                </div>
-            </td>
-        </tr>
-    </table>
-    <div style="text-align: center; margin-top: 20px; padding-bottom: 20px;">
-        <img src="{{logoUrl}}" alt="Agricovet Logo" style="width: 80px; height: 80px; object-fit: contain; opacity: 0.9;" />
+    <div style="text-align: center; margin-top: 30px; padding-bottom: 20px; page-break-inside: avoid; break-inside: avoid;">
+        <img src="{{logoUrl}}" alt="AGRICOVET Logo" style="width: 80px; height: 80px; object-fit: contain; opacity: 0.8;" />
     </div>
 </body>
 </html>`;
@@ -863,28 +729,76 @@ export async function printHtml(html: string) {
 }
 
 export async function downloadHtmlAsPdf(html: string, filename: string = 'factura.pdf') {
-  const opt = {
-    margin: [0.3, 0.3, 0.3, 0.3],
-    filename: filename,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { 
-      scale: 2, 
-      useCORS: true,
-      logging: false,
-      allowTaint: true
-    },
-    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-    pagebreak: { mode: ['css', 'legacy'] }
-  };
-  
+  // Create an isolated container hidden offscreen with fixed desktop layout width
+  const container = document.createElement('div');
+  container.style.position = 'absolute';
+  container.style.left = '-9999px';
+  container.style.top = '0';
+  container.style.width = '800px';
+  container.style.backgroundColor = '#ffffff';
+  container.style.zIndex = '-100';
+
   const element = document.createElement('div');
+  element.style.width = '800px';
+  element.style.boxSizing = 'border-box';
+  element.style.backgroundColor = '#ffffff';
+  element.style.padding = '20px';
   element.innerHTML = html;
-  
-  // Convert images to base64 before passing to html2pdf
-  await convertAllImagesToBase64(element);
-  
-  // @ts-ignore
-  html2pdf().from(element).set(opt).save();
+
+  container.appendChild(element);
+  document.body.appendChild(container);
+
+  try {
+    // Convert images to base64 before passing to html2pdf
+    await convertAllImagesToBase64(element);
+
+    // Explicitly wait for all image elements to decode/load fully
+    const imgs = Array.from(element.querySelectorAll('img'));
+    await Promise.allSettled(
+      imgs.map((img) => {
+        const htmlImg = img as HTMLImageElement;
+        if (typeof htmlImg.decode === 'function') {
+          return htmlImg.decode().catch((e) => console.warn("Image decode notice", e));
+        } else {
+          return new Promise((resolve) => {
+            if (htmlImg.complete && htmlImg.naturalHeight !== 0) {
+              resolve(null);
+            } else {
+              htmlImg.onload = () => resolve(null);
+              htmlImg.onerror = () => resolve(null);
+            }
+          });
+        }
+      })
+    );
+
+    // Wait a brief moment to allow layouts to compute and stabilize
+    await new Promise((resolve) => setTimeout(resolve, 250));
+
+    const opt = {
+      margin: [0.3, 0.3, 0.3, 0.3],
+      filename: filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true,
+        logging: false,
+        allowTaint: true
+      },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+    
+    // @ts-ignore
+    await html2pdf().from(element).set(opt).save();
+  } catch (error) {
+    console.error("PDF generation failed:", error);
+    throw error;
+  } finally {
+    if (document.body.contains(container)) {
+      document.body.removeChild(container);
+    }
+  }
 }
 
 export interface PasswordValidationResult {
@@ -945,7 +859,7 @@ export async function downloadProductsPdf(products: any[]): Promise<void> {
     totalValuation += valuation;
 
     return `
-      <tr style="border-bottom: 1px solid #e2e8f0; ${idx % 2 === 0 ? 'background-color: #ffffff;' : 'background-color: #f8fafc;'}">
+      <tr style="border-bottom: 1px solid #e2e8f0; ${idx % 2 === 0 ? 'background-color: #ffffff;' : 'background-color: #f8fafc;'} page-break-inside: avoid; break-inside: avoid;">
         <td style="padding: 8px 10px; font-family: monospace; font-size: 10px; color: #475569;">${p.id ? String(p.id).substring(0, 8) : `PRD-${idx + 1}`}</td>
         <td style="padding: 8px 10px; font-weight: 600; color: #0f172a; font-size: 11px;">${p.name || 'Sin nombre'}</td>
         <td style="padding: 8px 10px; color: #475569; font-size: 10px;">${p.category || 'General'}</td>
@@ -956,10 +870,24 @@ export async function downloadProductsPdf(products: any[]): Promise<void> {
     `;
   }).join('');
 
+  // Create isolated container hidden from user view
   const container = document.createElement('div');
-  container.innerHTML = `
-    <div style="font-family: 'Segoe UI', Arial, sans-serif; padding: 25px; color: #0f172a; background: #ffffff;">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f172a; padding-bottom: 15px; margin-bottom: 20px;">
+  container.style.position = 'absolute';
+  container.style.left = '-9999px';
+  container.style.top = '0';
+  container.style.width = '800px';
+  container.style.backgroundColor = '#ffffff';
+  container.style.zIndex = '-100';
+
+  const element = document.createElement('div');
+  element.style.width = '800px';
+  element.style.boxSizing = 'border-box';
+  element.style.backgroundColor = '#ffffff';
+  element.style.padding = '25px';
+
+  element.innerHTML = `
+    <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #0f172a; background: #ffffff;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f172a; padding-bottom: 15px; margin-bottom: 20px; page-break-inside: avoid; break-inside: avoid;">
         <div>
           <h1 style="font-size: 18px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase;">Sistema POS & Inventarios</h1>
           <p style="font-size: 11px; color: #64748b; margin: 4px 0 0 0; font-weight: 600;">Catálogo e Inventario Oficial de Productos</p>
@@ -970,7 +898,7 @@ export async function downloadProductsPdf(products: any[]): Promise<void> {
         </div>
       </div>
 
-      <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+      <div style="display: flex; gap: 15px; margin-bottom: 20px; page-break-inside: avoid; break-inside: avoid;">
         <div style="flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px;">
           <span style="font-size: 9px; font-weight: 700; color: #64748b; text-transform: uppercase; display: block;">Total Productos</span>
           <span style="font-size: 15px; font-weight: 800; color: #0f172a;">${products.length} ítems</span>
@@ -987,7 +915,7 @@ export async function downloadProductsPdf(products: any[]): Promise<void> {
 
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 11px;">
         <thead>
-          <tr style="background-color: #0f172a; color: #ffffff; font-size: 10px; font-weight: 700; text-transform: uppercase;">
+          <tr style="background-color: #0f172a; color: #ffffff; font-size: 10px; font-weight: 700; text-transform: uppercase; page-break-inside: avoid; break-inside: avoid;">
             <th style="padding: 10px; text-align: left; width: 15%;">Código / ID</th>
             <th style="padding: 10px; text-align: left; width: 35%;">Producto</th>
             <th style="padding: 10px; text-align: left; width: 20%;">Categoría</th>
@@ -1001,27 +929,55 @@ export async function downloadProductsPdf(products: any[]): Promise<void> {
         </tbody>
       </table>
 
-      <div style="border-top: 1px solid #e2e8f0; padding-top: 10px; font-size: 9px; color: #94a3b8; display: flex; justify-content: space-between;">
+      <div style="border-top: 1px solid #e2e8f0; padding-top: 10px; font-size: 9px; color: #94a3b8; display: flex; justify-content: space-between; page-break-inside: avoid; break-inside: avoid;">
         <span>Documento generado por el Sistema POS Enterprise</span>
-        <span>Página 1</span>
+        <span>Catálogo de Productos</span>
       </div>
     </div>
   `;
 
+  container.appendChild(element);
   document.body.appendChild(container);
+
+  // Explicitly wait for all image elements to decode/load fully
+  const imgs = Array.from(element.querySelectorAll('img'));
+  await Promise.allSettled(
+    imgs.map((img) => {
+      const htmlImg = img as HTMLImageElement;
+      if (typeof htmlImg.decode === 'function') {
+        return htmlImg.decode().catch((e) => console.warn("Image decode notice", e));
+      } else {
+        return new Promise((resolve) => {
+          if (htmlImg.complete && htmlImg.naturalHeight !== 0) {
+            resolve(null);
+          } else {
+            htmlImg.onload = () => resolve(null);
+            htmlImg.onerror = () => resolve(null);
+          }
+        });
+      }
+    })
+  );
+
+  // Wait a brief moment to allow layouts to compute and stabilize
+  await new Promise((resolve) => setTimeout(resolve, 250));
 
   const opt = {
     margin: [8, 8, 8, 8] as [number, number, number, number],
     filename: `catalogo_productos_${new Date().toISOString().split('T')[0]}.pdf`,
     image: { type: 'jpeg' as const, quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+    html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
+    jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['tr', '.avoid-break', 'tbody'] }
   };
 
   try {
-    await html2pdf().set(opt).from(container).save();
+    // @ts-ignore
+    await html2pdf().set(opt).from(element).save();
   } finally {
-    document.body.removeChild(container);
+    if (document.body.contains(container)) {
+      document.body.removeChild(container);
+    }
   }
 }
 

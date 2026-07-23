@@ -714,6 +714,29 @@ export function InventoryPage({ user, isMobile }: InventoryPageProps) {
 
                     const worksheet = XLSX.utils.json_to_sheet(rows);
                     worksheet['!cols'] = [{wch: 15}, {wch: 40}, {wch: 25}, {wch: 15}, {wch: 18}, {wch: 20}];
+                    
+                    // Format columns cell by cell to ensure professional data representation
+                    if (worksheet['!ref']) {
+                      const range = XLSX.utils.decode_range(worksheet['!ref']);
+                      for (let r = range.s.r + 1; r <= range.e.r; r++) {
+                        // Stock Físico (column index 3 -> D) as integer format
+                        const stockCell = worksheet[XLSX.utils.encode_cell({ r, c: 3 })];
+                        if (stockCell && typeof stockCell.v === 'number') {
+                          stockCell.z = '#,##0';
+                        }
+                        // Precio Unitario (column index 4 -> E) as Guatemalan Quetzal currency format
+                        const priceCell = worksheet[XLSX.utils.encode_cell({ r, c: 4 })];
+                        if (priceCell && typeof priceCell.v === 'number') {
+                          priceCell.z = '"Q"#,##0.00';
+                        }
+                        // Valor Total (column index 5 -> F) as Guatemalan Quetzal currency format
+                        const valCell = worksheet[XLSX.utils.encode_cell({ r, c: 5 })];
+                        if (valCell && typeof valCell.v === 'number') {
+                          valCell.z = '"Q"#,##0.00';
+                        }
+                      }
+                    }
+
                     const workbook = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(workbook, worksheet, "Inventario");
                     XLSX.writeFile(workbook, `inventario_${new Date().toISOString().split('T')[0]}.xlsx`);
