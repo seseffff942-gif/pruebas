@@ -441,7 +441,7 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
     let base64Logo = logoData;
     
     if (!base64Logo) {
-      const headerImg = document.querySelector('img[alt="Logo Central"]') as HTMLImageElement || document.querySelector('img[alt="Logo"]') as HTMLImageElement;
+      const headerImg = (document.querySelector('img[alt="Logo Central"]') as HTMLImageElement) || (document.querySelector('img[alt="Logo"]') as HTMLImageElement);
       if (headerImg && headerImg.complete && headerImg.naturalHeight !== 0) {
         try {
           const canvas = document.createElement('canvas');
@@ -460,9 +460,19 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
 
     const totalAmount = selectedInvoice.items.reduce((sum, item) => sum + (dispatchedItems[item.productId] || 0) * (item.price || 0), 0);
 
+    // Create isolated container hidden from user view
+    const container = document.createElement('div');
+    container.style.position = 'absolute';
+    container.style.left = '-9999px';
+    container.style.top = '0';
+    container.style.width = '800px';
+    container.style.backgroundColor = '#ffffff';
+    container.style.zIndex = '-100';
+    
     const element = document.createElement('div');
-    element.style.width = '760px';
-    element.style.padding = '30px 35px';
+    element.style.width = '800px';
+    element.style.padding = '35px 40px';
+    element.style.boxSizing = 'border-box';
     element.style.backgroundColor = '#ffffff';
     element.style.fontFamily = "'Inter', 'Segoe UI', 'Arial', sans-serif";
     element.style.color = '#0f172a';
@@ -472,7 +482,7 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
         const price = item.price || 0;
         const subtotal = qty * price;
         return `
-          <tr style="border-bottom: 1px solid #e2e8f0; ${index % 2 === 1 ? 'background-color: #f8fafc;' : ''}">
+          <tr style="border-bottom: 1px solid #e2e8f0; ${index % 2 === 1 ? 'background-color: #f8fafc;' : ''} page-break-inside: avoid; break-inside: avoid;">
             <td style="padding: 10px 12px; font-size: 8.5pt; font-weight: 700; font-family: monospace; color: #475569;">${item.productId}</td>
             <td style="padding: 10px 12px; font-size: 9pt; font-weight: 700; color: #0f172a;">${item.productName || 'Producto'}</td>
             <td style="padding: 10px 12px; font-size: 9.5pt; font-weight: 800; color: #0f172a; text-align: center;">${qty} / ${item.quantity}</td>
@@ -484,7 +494,7 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
 
     element.innerHTML = `
       <!-- Header Neutral -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 20px; border-bottom: 2px solid #0f172a; margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 20px; border-bottom: 2px solid #0f172a; margin-bottom: 20px; page-break-inside: avoid; break-inside: avoid;">
         <div style="flex: 1;">
           <div style="font-size: 8pt; font-weight: 800; color: #047857; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">SISTEMA DE GESTIÓN Y CONTROL</div>
           <h1 style="font-size: 22pt; font-weight: 900; color: #0f172a; margin: 0; line-height: 1; letter-spacing: -0.5px; text-transform: uppercase;">COMPROBANTE DE EGRESO DE INVENTARIO</h1>
@@ -498,7 +508,7 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
       </div>
       
       <!-- General Metadata Grid -->
-      <div style="display: flex; justify-content: space-between; gap: 20px; margin-bottom: 25px; background-color: #f8fafc; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0;">
+      <div style="display: flex; justify-content: space-between; gap: 20px; margin-bottom: 25px; background-color: #f8fafc; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0; page-break-inside: avoid; break-inside: avoid;">
         <div style="width: 48%;">
           <div style="font-size: 7.5pt; font-weight: 800; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">INFORMACIÓN DEL RECEPTOR / CLIENTE</div>
           <div style="font-weight: 900; font-size: 11pt; color: #0f172a; margin-bottom: 4px;">${selectedInvoice.client}</div>
@@ -522,7 +532,7 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
       <!-- Items Table -->
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
         <thead>
-          <tr style="background-color: #0f172a; color: #ffffff;">
+          <tr style="background-color: #0f172a; color: #ffffff; page-break-inside: avoid; break-inside: avoid;">
             <th style="padding: 10px 12px; text-align: left; font-size: 8pt; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; width: 18%;">CÓDIGO SKU</th>
             <th style="padding: 10px 12px; text-align: left; font-size: 8pt; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">DESCRIPCIÓN DE MERCADERÍA</th>
             <th style="padding: 10px 12px; text-align: center; font-size: 8pt; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; width: 18%;">CANT. (DESP/TOTAL)</th>
@@ -536,7 +546,7 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
       </table>
       
       <!-- Summary and Signatures Footer -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px; page-break-inside: avoid; break-inside: avoid;">
         <div style="width: 55%; font-size: 8pt; color: #64748b; line-height: 1.4;">
           <div style="font-weight: 800; color: #0f172a; margin-bottom: 4px; uppercase">POLÍTICA DE REVISIÓN Y ENTREGA</div>
           <span>Verifique su mercadería al momento de recibir. Las devoluciones o reclamos posteriores están sujetos a las políticas estándar de la empresa (hasta 8 días hábiles).</span>
@@ -570,33 +580,44 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
       </div>
     `;
 
-    document.body.appendChild(element);
+    container.appendChild(element);
+    document.body.appendChild(container);
     
+    // Ensure all images are fully loaded before rendering canvas
     const imgElement = element.querySelector('#pdf-logo-final') as HTMLImageElement;
     if (imgElement) {
-      await new Promise((resolve) => {
-        if (imgElement.complete && imgElement.naturalHeight !== 0) resolve(null);
-        else {
-          imgElement.onload = () => resolve(null);
-          imgElement.onerror = () => resolve(null);
-        }
-      });
+      if ('decode' in imgElement) {
+        try { await imgElement.decode(); } catch (e) { console.warn("Image decode notice", e); }
+      } else {
+        await new Promise((resolve) => {
+          if (imgElement.complete && imgElement.naturalHeight !== 0) resolve(null);
+          else {
+            imgElement.onload = () => resolve(null);
+            imgElement.onerror = () => resolve(null);
+          }
+        });
+      }
     }
     
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 250));
     
     try {
-      await html2pdf().from(element).set({
-        margin: 5,
+      const opt = {
+        margin: [8, 8, 8, 8],
         filename: `comprobante_egreso_${selectedInvoice.id}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      }).save();
+        html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['tr', '.avoid-break', 'tbody'] }
+      };
+
+      await html2pdf().from(element).set(opt).save();
     } catch (err) {
       console.error("PDF Export error:", err);
     } finally {
-      document.body.removeChild(element);
+      if (document.body.contains(container)) {
+        document.body.removeChild(container);
+      }
     }
   };
 
