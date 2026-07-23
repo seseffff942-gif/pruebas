@@ -584,16 +584,17 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
     document.body.appendChild(container);
     
     // Ensure all images are fully loaded before rendering canvas
-    const imgElement = element.querySelector('#pdf-logo-final') as HTMLImageElement;
+    const imgElement = element.querySelector('#pdf-logo-final') as HTMLImageElement | null;
     if (imgElement) {
       if ('decode' in imgElement) {
         try { await imgElement.decode(); } catch (e) { console.warn("Image decode notice", e); }
       } else {
         await new Promise((resolve) => {
-          if (imgElement.complete && imgElement.naturalHeight !== 0) resolve(null);
+          const img = imgElement as HTMLImageElement;
+          if (img.complete && img.naturalHeight !== 0) resolve(null);
           else {
-            imgElement.onload = () => resolve(null);
-            imgElement.onerror = () => resolve(null);
+            img.onload = () => resolve(null);
+            img.onerror = () => resolve(null);
           }
         });
       }
@@ -603,7 +604,7 @@ export function DispatchPage({ user, isMobile }: DispatchPageProps) {
     
     try {
       const opt = {
-        margin: [8, 8, 8, 8],
+        margin: [8, 8, 8, 8] as [number, number, number, number],
         filename: `comprobante_egreso_${selectedInvoice.id}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
