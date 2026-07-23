@@ -550,20 +550,89 @@ export function InventoryPage({ user, isMobile }: InventoryPageProps) {
 
       <div className="flex flex-col space-y-6">
         
+        {/* ── INVENTORY HERO BANNER ── */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0b4d2c] via-[#0f5c35] to-[#1a7d48] p-5 sm:p-7 shadow-lg">
+          <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white/5 pointer-events-none" />
+          <div className="absolute -bottom-6 left-10 w-32 h-32 rounded-full bg-white/5 pointer-events-none" />
+          <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <p className="text-emerald-300/80 text-xs font-bold uppercase tracking-widest">Control de</p>
+              <h2 className="text-white text-2xl sm:text-3xl font-black tracking-tight">Inventario</h2>
+              <p className="text-white/60 text-xs mt-1">Gestiona tu catálogo de productos y existencias</p>
+            </div>
+            <div className="flex gap-3 flex-wrap">
+              <div className="bg-white/10 border border-white/15 rounded-2xl px-4 py-3 text-center min-w-[90px]">
+                <p className="text-white font-black text-2xl leading-none">{products.length}</p>
+                <p className="text-white/60 text-[10px] font-bold uppercase mt-1">Productos</p>
+              </div>
+              <div className="bg-white/10 border border-white/15 rounded-2xl px-4 py-3 text-center min-w-[90px]">
+                <p className="text-emerald-300 font-black text-xl leading-none">
+                  {products.filter(p => !p.is_external && (p.stock ?? 0) > 5).length}
+                </p>
+                <p className="text-white/60 text-[10px] font-bold uppercase mt-1">Con Stock</p>
+              </div>
+              <div className="bg-red-500/20 border border-red-400/30 rounded-2xl px-4 py-3 text-center min-w-[90px]">
+                <p className="text-red-300 font-black text-xl leading-none">
+                  {products.filter(p => !p.is_external && (p.stock ?? 0) <= 0).length}
+                </p>
+                <p className="text-white/60 text-[10px] font-bold uppercase mt-1">Agotados</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Category chips inside hero */}
+          {inventoryViewMode !== 'office' && (
+            <div className="relative mt-5 flex gap-2 flex-wrap">
+              {categories.slice(0, 8).map((cat) => {
+                const CatIcon = getCategoryIcon(cat);
+                const isActive = selectedCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-black transition-all cursor-pointer border",
+                      isActive
+                        ? "bg-white text-[#0b4d2c] border-white shadow-sm"
+                        : "bg-white/10 text-white/80 border-white/15 hover:bg-white/20"
+                    )}
+                  >
+                    <CatIcon size={11} />
+                    {cat}
+                    {cat !== 'Todos' && (
+                      <span className={cn("text-[9px] px-1 rounded-full font-black", isActive ? "bg-[#0b4d2c]/10 text-[#0b4d2c]" : "bg-white/10 text-white/60")}>
+                        {products.filter(p => p.category === cat).length}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
         {/* Search, Actions & Category Filter Panel */}
         <div className="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 sm:space-y-6">
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
             
-            {/* Search Input */}
-            <div className={cn("relative w-full lg:max-w-xs flex-1", inventoryViewMode === 'office' ? 'invisible hidden lg:block' : '')}>
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+            {/* Search Input - Rediseñado */}
+            <div className={cn("relative w-full lg:max-w-sm flex-1 group", inventoryViewMode === 'office' ? 'invisible hidden lg:block' : '')}>
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0b4d2c] transition-colors" size={17} />
               <input
                 type="text"
-                placeholder="Buscar insumo, marca o SKU..."
+                placeholder="Buscar producto, marca o SKU..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-805 placeholder:text-slate-400 text-xs sm:text-sm font-semibold outline-none focus:border-[#0b4d2c] focus:bg-white transition-all shadow-inner"
+                className="w-full pl-11 pr-10 py-3 bg-white border-2 border-slate-200 rounded-2xl text-slate-800 placeholder:text-slate-400 text-sm font-semibold outline-none focus:border-[#0b4d2c] focus:shadow-[0_0_0_3px_rgba(11,77,44,0.08)] transition-all"
               />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 transition-all cursor-pointer"
+                >
+                  <X size={12} />
+                </button>
+              )}
             </div>
 
             {/* Vista Toggle / View Mode Segmented Bar */}

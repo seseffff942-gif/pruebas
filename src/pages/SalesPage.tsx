@@ -1218,31 +1218,46 @@ export function SalesPage({ user, isMobile }: SalesPageProps) {
             : "md:w-[410px] h-full relative"
         )}
       >
-        {/* Header container */}
-        <div className="p-6 border-b border-slate-100 bg-slate-50/50 shrink-0 relative">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+        {/* Header container - Rediseñado */}
+        <div className="bg-gradient-to-r from-[#0b4d2c] to-[#1a6640] p-5 shrink-0 relative overflow-hidden">
+          <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
+          <div className="relative flex items-center justify-between">
+            <div className="flex items-center gap-3">
               {isMobile ? (
                 <button 
                   onClick={() => setIsCartOpen(false)} 
-                  className="p-2.5 bg-slate-100 hover:bg-slate-200 text-[#0b4d2c] rounded-xl transition-all cursor-pointer mr-1 flex items-center justify-center border border-slate-200 active:scale-95"
+                  className="p-2 bg-white/15 hover:bg-white/25 text-white rounded-xl transition-all cursor-pointer flex items-center justify-center active:scale-95"
                   title="Cerrar y seguir agregando productos"
                 >
                   <ArrowLeft size={18} />
                 </button>
               ) : (
-                <div className="p-2 bg-emerald-50 text-[#0b4d2c] rounded-xl border border-emerald-100">
-                  <ShoppingCart size={18} />
+                <div className="relative">
+                  <div className="p-2.5 bg-white/15 text-white rounded-xl">
+                    <ShoppingCart size={18} />
+                  </div>
+                  {cart.length > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-emerald-400 text-[#0b4d2c] rounded-full text-[9px] font-black flex items-center justify-center shadow-sm">
+                      {cart.reduce((s, i) => s + i.quantity, 0)}
+                    </span>
+                  )}
                 </div>
               )}
-              <h2 className="font-black text-slate-800 text-sm sm:text-base uppercase tracking-wider">Carrito de Compra</h2>
+              <div>
+                <h2 className="font-black text-white text-sm uppercase tracking-wider leading-none">Carrito</h2>
+                <p className="text-white/60 text-[10px] mt-0.5">
+                  {cart.length === 0 ? 'Sin productos' : `${cart.reduce((s, i) => s + i.quantity, 0)} ítem(s)`}
+                </p>
+              </div>
             </div>
-            <button 
-              onClick={() => { if(confirm('¿Seguro que deseas vaciar el carrito actual?')) { setCart([]); setClient(''); setNit(''); setPhone(''); setAddress(''); setIsEditingAddress(false); setNotes(''); setCheckoutIsOwed(false); setTransportMethod(''); setShippingHandled(false); setInvoiceType('agricola'); setEditingInvoiceId(null); } }} 
-              className="text-red-650 hover:text-red-700 font-bold text-[10px] uppercase tracking-widest flex items-center gap-1 transition-colors bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-xl cursor-pointer"
-            >
-               <Trash2 size={12} /> Vaciar
-            </button>
+            {cart.length > 0 && (
+              <button 
+                onClick={() => { if(confirm('¿Seguro que deseas vaciar el carrito actual?')) { setCart([]); setClient(''); setNit(''); setPhone(''); setAddress(''); setIsEditingAddress(false); setNotes(''); setCheckoutIsOwed(false); setTransportMethod(''); setShippingHandled(false); setInvoiceType('agricola'); setEditingInvoiceId(null); } }} 
+                className="text-red-300 hover:text-white font-bold text-[10px] uppercase tracking-widest flex items-center gap-1 transition-colors bg-red-500/20 hover:bg-red-500/40 px-2.5 py-1.5 rounded-xl cursor-pointer border border-red-400/20"
+              >
+                <Trash2 size={11} /> Vaciar
+              </button>
+            )}
           </div>
         </div>
         
@@ -1251,9 +1266,10 @@ export function SalesPage({ user, isMobile }: SalesPageProps) {
           
           {/* Customer Selection Block */}
           <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-200/50 pb-1.5 flex items-center gap-1.5">
-              <span>👤</span> Información del Cliente
-            </h3>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-[#0b4d2c] text-white rounded-full text-[10px] font-black flex items-center justify-center shrink-0">1</div>
+              <h3 className="text-[11px] font-black text-[#0b4d2c] uppercase tracking-widest">Información del Cliente</h3>
+            </div>
 
             <div className="space-y-3">
               <div className="w-full">
@@ -1368,6 +1384,10 @@ export function SalesPage({ user, isMobile }: SalesPageProps) {
 
             {/* Shipment details */}
             <div className="border-t border-slate-200/60 pt-3 space-y-3">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 bg-blue-600 text-white rounded-full text-[10px] font-black flex items-center justify-center shrink-0">2</div>
+                <h3 className="text-[11px] font-black text-blue-700 uppercase tracking-widest">Envío y Transporte</h3>
+              </div>
               {user?.email === 'seseffff942@gmail.com' && (
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Fecha de la Venta</label>
@@ -1485,16 +1505,23 @@ export function SalesPage({ user, isMobile }: SalesPageProps) {
 
           {/* Cart Products List */}
           <div className="space-y-3.5">
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-between">
-              <span>🛒 Productos en Carrito</span>
-              <span className="font-bold text-emerald-800 bg-[#0b4d2c]/10 px-2 py-0.5 rounded-full"><span className="notranslate" translate="no">{cart.length}</span> únicos</span>
-            </h3>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-amber-500 text-white rounded-full text-[10px] font-black flex items-center justify-center shrink-0">3</div>
+              <h3 className="text-[11px] font-black text-amber-700 uppercase tracking-widest">Productos en Carrito</h3>
+              {cart.length > 0 && (
+                <span className="ml-auto font-bold text-emerald-800 bg-[#0b4d2c]/10 px-2 py-0.5 rounded-full text-[10px]">{cart.length} únicos</span>
+              )}
+            </div>
 
             {cart.length === 0 ? (
-              <div className="text-center text-slate-405 py-12 border-2 border-dashed border-slate-200 rounded-2xl mx-1 flex flex-col items-center justify-center space-y-2">
-                <ShoppingCart size={24} className="text-slate-300" />
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Tu carrito está vacío</p>
-                <p className="text-[10px] text-slate-405 leading-none">Haz click en los productos del catálogo para sumarlos</p>
+              <div className="text-center text-slate-405 py-10 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center space-y-3">
+                <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center">
+                  <ShoppingCart size={22} className="text-slate-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-black text-slate-500">Carrito vacío</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">Selecciona productos del catálogo izquierdo</p>
+                </div>
               </div>
             ) : (
               <div className="space-y-3">
@@ -1641,32 +1668,42 @@ export function SalesPage({ user, isMobile }: SalesPageProps) {
 
         </div>
 
-        {/* Footer actions total invoice block */}
-        <div className="bg-slate-50 p-6 border-t border-slate-200 z-10 shrink-0">
+        {/* Footer actions total invoice block - Rediseñado */}
+        <div className="bg-white p-5 border-t border-slate-100 z-10 shrink-0">
           
-          <div className="flex justify-between items-center mb-5">
-             <span className="font-extrabold text-slate-500 text-sm uppercase tracking-widest">Total del Pedido</span>
-             <span className="font-black text-[#0b4d2c] text-2xl sm:text-3xl bg-white border border-emerald-950/5 px-4.5 py-1.5 rounded-2xl shadow-sm">
-                <span className="notranslate" translate="no">{formatMoney(cartTotal)}</span>
-             </span>
+          {/* Total block */}
+          <div className="bg-gradient-to-r from-[#0b4d2c]/5 to-emerald-50/50 border border-emerald-100 rounded-2xl p-4 mb-4">
+            <div className="flex justify-between items-center">
+               <div>
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total del Pedido</p>
+                 <p className="text-xs text-emerald-700 font-semibold mt-0.5">{cart.reduce((s,i)=>s+i.quantity,0)} productos · {cart.length} únicos</p>
+               </div>
+               <span className="font-black text-[#0b4d2c] text-3xl">
+                 <span className="notranslate" translate="no">{formatMoney(cartTotal)}</span>
+               </span>
+            </div>
           </div>
 
           <div className="flex flex-col gap-2.5">
             <button 
               disabled={isSubmitting || cart.length === 0}
               onClick={() => handleCheckout(true)}
-              className="w-full bg-gradient-to-r from-[#0b4d2c] to-[#07361e] text-white py-4 rounded-2xl font-black hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-emerald-950/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:active:scale-100 text-xs sm:text-sm uppercase tracking-wider cursor-pointer"
+              className="w-full bg-gradient-to-r from-[#0b4d2c] to-[#1a6640] hover:from-[#0a4226] hover:to-[#135032] text-white py-4 rounded-2xl font-black active:scale-[0.98] transition-all shadow-lg shadow-emerald-950/25 flex items-center justify-center gap-2.5 disabled:opacity-50 disabled:active:scale-100 text-sm uppercase tracking-wide cursor-pointer"
             >
-              <CheckCircle size={16} />
-              {editingInvoiceId ? 'ACTUALIZAR PEDIDO S/CRÉDITO' : (navigator.onLine ? 'REGISTRAR AL CRÉDITO Y FIRMAR' : 'REGISTRAR AL CRÉDITO OFFLINE Y FIRMAR')}
+              <CheckCircle size={18} />
+              {isSubmitting ? (
+                <span className="flex items-center gap-2"><RefreshCw size={14} className="animate-spin" /> Procesando...</span>
+              ) : (
+                editingInvoiceId ? 'Actualizar Pedido' : '✓ Confirmar y Firmar'
+              )}
             </button>
             {isMobile && (
               <button 
                 type="button"
                 onClick={() => setIsCartOpen(false)}
-                className="w-full bg-[#f4f7f5] hover:bg-slate-200 text-[#0b4d2c] border border-slate-200/80 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer shadow-xs mt-1"
+                className="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
               >
-                ➕ SEGUIR AGREGANDO PRODUCTOS
+                ← Seguir Agregando
               </button>
             )}
           </div>
